@@ -1,0 +1,52 @@
+Argument passed in Register: %rdi, %rsi, %rdx, %rcx, %r8, %r9.
+
+Return values:               %rax
+
+Callee-Saved:                %rbx, %r12, %r13, %r14. %rbp, %rsp
+
+Caller-Saved                 %rdi, %rsi, %rdx, %rcx, %r8, %r9, %rax, %r10, %r11
+
+Stack pointer:               %rsp
+
+Instruction pointer:         %rip
+
+First step: gdb ./ctarget
+
+Second step: break at touch1-5 (5 levels)
+
+
+./hex2raw < ctarget.12 > ctarget.12.raw      <-This will convert the string file to a raw file to test
+
+gcc -c level2.s
+objdump -d level2.o > level2.d      <- This will convert the file into a Binary file then objdump will convert it to hex file then copy the 					       hex numbers and replace it with the 00 00 00...
+
+
+to run type "run -q" or "ctarget.12.raw -q" ...
+Third step: create text files then run it with the command code
+unix> run < ctarget.11.raw -q
+
+Phase1:
+Pretty much convert 0x38 = decimals 
+then do 00 for each decimals
+Ex:
+00 00 00 00 
+00 00 00 00
+...
+Then add the return address of touch1 at the last line and done
+
+Phase2:
+same as phase1.
+However, I need to find the cookie value which is the 0x2012..something + $rip
+then do the   gcc   then the   objdump -d
+convert it into assembly language which is 34 43 31 ...
+then add it into the 00 00 00 00 which will change it.
+
+Phase3:
+$rsp address = 55619178
+buffer + 8 return address of rsp + 8 for touch3 (return function)
+0x38 + 8 + 8 = 48 (72 Decimals)
+so 55619178 + 48 = 0x556191c0
+do gcc and objdump
+
+Phase4:
+

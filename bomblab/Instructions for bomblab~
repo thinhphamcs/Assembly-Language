@@ -1,0 +1,314 @@
+This for phase 1: Basically, "Hello World" which is a phrase. So if I can find the correct phrase I can defuse the bomb.
+
+So first thing first, let type these commands into linux cmd.
+
+-Type "objdump -d bomb".
+This will bring all the bomb strings. Then look up till find the "phase_1,2,3,4...".
+
+-Then type in "gdb bomb".
+This will read the homework first.
+
+-Then type "gdb".
+This will bring the debugger.
+
+-Next type "break phase_1". 
+This will set a breakpoint.
+
+-Then type "run".
+This will run the program.
+
+-Then type "test string". 
+This will enter a test string into stdin
+
+-Then type "p/x $eax".
+This will find the memory address of $eax
+
+-Then type "x /s 0xsomething".
+This will check to confirm by using this method.
+
+Answer is:
+When I get angry, Mr. Bigglesworth gets upset.
+
+--------------------------------------------------------------------------------------------
+
+This is for phase 2: this phase is to "read 6 numbers." Look "read_six_numbers" for all the strings on "objdump -d"
+
+-Type in "gdb bomb".
+This will read the homework first.
+
+-Next type "break phase_2". 
+This will set a breakpoint.
+
+-Next type "run ThinhPham-sol.txt"
+This will read the hw solution just to see if it works
+
+-Next type "1 2 3 4 5 6"
+Just type any 6 numbers to test if the breakpoint works
+
+-Next type "disas"
+This will bring all the string codes up or only till breakpoint 2 (phase 2)
+Looking at the strings:
+cmpl //compare first int to 1
+imul //the condition we
+cmp //have to meet
+cmp //there's a loop going on here
+
+-Next type "layout reg"
+This will bring shows how the assembly code work.
+
+-Next type "ni"
+This will move next from the assembly code 
+
+-Next type "si"
+This will step into it
+
+-Next type "disas"
+After type disas again. I will see that it has step into the function 
+
+-Next type "until *something" the something will equal 0x0... and it will be next to "read_six_numbers +#" and above "explode_bomb"
+This let us stop before the bomb exploded
+
+-Next type "i r"
+This will let us see the contents of our registers.
+
+The answer is:
+1 2 4 7 11 16
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+This is for phase 3: This phase doesn't have a name because it reads or scans inputs, could be a work or a number or both.
+
+-Type in "break phase_3"
+This will set up a breakpoint
+
+-Type in "run solutions"
+Will run the solutions and ends at phase 3
+
+-Next type in "layout reg"
+This will show all the layout
+
+-Type in "p (char *) 0x40258f" //the 0x40258f can be any memory, but it has to be next to "esi"
+This will show how many values I need to input
+It located above the scanf funtion
+
+Note:
+
+RSP where I store my value
+
+first argument to functions is usually placed on register "rdi"
+I know the first number has to be less than or equal to 7. According to "cmpl   $0x7,(%rsp)"
+the rule for calculating address is "*(%rax * 8 + 0x402470)" //where 0x402470 could be any memory address
+
+Possible numbers:
+35f d9  38a 85  286 2b1 305 - Hex
+863 217 906 133 646 689 773 - Dec
+
+(gdb) x/1dw 0x8(%esp)
+(gdb) p /x *(int *)($rsp+0x8)
+
+$0x2,%eax
+if not equal jumps to next line
+
+cmpl   $0x4,($rsp)
+This compare value at the top of the stack to 4. If it's < or = jump next bypassing explode bomb
+
+ni 13 - toward the *codeline
+
+0-Next line, 57-Next
+1-3 lines, 57-71 
+2-6 lines, 57-83
+3-9 lines, 57-95
+4-12 lines, 57-107
+5-15 lines, 57-119
+6-18 lines, 57-131
+7-21 lines, 57-143
+8 bomb exploded so no 8
+
+133 is the correct answer.
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+This is for phase 4: This phase will require another 2 inputs very similar to phase 3
+
+-First type "break phase_4"
+This will make a breakpoint
+
+-Next type "run solution"
+Run the solution
+
+-Next type "layout reg"
+show all the layouts
+
+-Next type "x/s memory address"
+This will show what I need to input, usually on top of the scanf function 
+
+-Next type "ni 16"
+This will move to the next 16 lines of code.
+
+Note:
+The first number is 6
+
+0xe,(%rsp) = 14 or < = to 14
+
+//Func 4
+int func4(int a, int b, int c) { 
+	int x = c - b; 
+	int y = x >> 31; 
+	x = x + y; 
+	x = x >> 1; 
+	y = x + b; 
+	if (y <= a) { 
+		if (y >= a) { 
+		return 0; 
+		} 
+		else { 
+		return 2 * func4(a, y + 1, c) + 1; 
+		} 
+	} 
+	else { 
+	return 2 * func4(a, b, y - 1);
+	}
+}
+Func4(ourFirstInputNumber, 0, 14) and that ourFirstInputNumber <= 14
+
+int func4(int a, int b, int c)
+	      6,     0,    14 { 
+	int x = 14 - 0; 
+	int y = 14 >> 31; 
+	x = 14 + 0; 
+	x = 14 >> 1; 
+	y = 7 + 0; 
+	if (7 <= 6) { 
+		if (y >= a) { 
+		return 0; 
+		} 
+		else { 
+		return 2 * func4(a, y + 1, c) + 1; 
+		} 
+	} 
+	else { 
+	return 2 * func4(6, 0, 7 - 1);
+	}
+}
+func4(6, 0, 6) { 
+	int x = 6 - 0; 
+	int y = 6 >> 31; 
+	x = 6 + 0; 
+	x = 6 >> 1; 
+	y = 3 + 0; 
+}
+return 2 * func4(6, 4, 14) + 1;
+	int x = 14 - 4; 
+	int y = 10 >> 31; 
+	x = 10 + 0; 
+	x = 10 >> 1; 
+	y = 5 + 4; //9 and 9 + 1 = 10
+func4(6, 4, 9) { 
+	int x = 9 - 4; 
+	int y = 5 >> 31; 
+	x = 5 + 0; 
+	x = 5 >> 1; 
+	y = 2 + 4; //6 
+}
+
+SO the answer is 6 and 6
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+This is for phase 5: 
+			our input has to be a string of 6 characters
+			the function accepts this 6 character string and loops over each character in it
+    			the result of the loop is compared to a fixed string, and if they’re equal, the bomb doesn’t explode
+
+-First type "break phase_5"
+This will make a breakpoint
+
+-Next type "run solution"
+Run the solution
+
+-Next type "layout reg"
+show all the layouts
+
+-Next type "ni 4-5"
+Move 4-5 lines after 
+
+Note:
+
+97 'a'  98 'b'  99 'c'  100 'd' 101 'e' 102 'f'
+
+ASCII Table and Description
+Hex    Dec   Words   Locations   Hidden   Values
+0x61 = 97  = a     = 0x1, 1    = 0xa    = 10
+0x62 = 98  = b     = 0x2, 2    = 0x10   = 16 
+0x63 = 99  = c     = 0x3, 3    = 0x11   = 17
+0x64 = 100 = d     = 0x4, 4    = 0x1d   = 29
+0x65 = 101 = e     = 0x5, 5    = 0x2d   = 45
+0x66 = 102 = f     = 0x6, 6    = 0x36   = 54
+
+Hidden table
+x/60d 0x402440
+0x402440 <array.3599>:		2	0	0	0	10	0	0	0
+0x402448 <array.3599+8>:	6	0	0	0	1	0	0	0
+0x402450 <array.3599+16>:	12	0	0	0	16	0	0	0
+0x402458 <array.3599+24>:	9	0	0	0	3	0	0	0
+0x402460 <array.3599+32>:	4	0	0	0	7	0	0	0
+0x402468 <array.3599+40>:	14	0	0	0	5	0	0	0
+0x402470 <array.3599+48>:	11	0	0	0	8	0	0	0
+0x402478 <array.3599+56>:	15	0	0	0
+
+Hideen table
+x/20w 0x402440
+0x402440 <array.3599>:		2	10	6	1
+0x402450 <array.3599+16>:	12	16	9	3
+0x402460 <array.3599+32>:	4	7	14	5
+0x402470 <array.3599+48>:	11	8	15	13
+
+
+x $rdx*4+memory address
+
+All I need is to find numbers that add up to 70.
+
+The answers could be in different combinations
+
+My answers were: eeepaa
+e = 16
+e = 16
+e = 16
+p = 2
+a = 10
+a = 10
+T = 70
+Look at the hiddent table.
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+This is for phase 6 or final phase:
+		
+    					six integers separated by spaces
+    					each integer should be less than or equal to 6
+    					no integer should be the same as any other integer
+
+
+-First type "break phase_6"
+This will make a breakpoint
+
+-Next type "run solution"
+Run the solution
+
+-Next type "layout reg"
+show all the layouts
+
+Note:
+
+x $r13
+0x7fffffffde00:	0x00000002
+
+x $r12
+0x400c60 <_start>:	0x8949ed31
+
+x $rbp
+0x7fffffffdc90:	0x00000001
+
+I gave up, so i tried all 720 combinations. Finally, I found one :D
+
+
+

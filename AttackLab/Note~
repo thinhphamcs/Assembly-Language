@@ -1,0 +1,11 @@
+Argument passed in Register: %rdi, %rsi, %rdx, %rcx, %r8, %r9.
+
+Return values:               %rax
+
+Callee-Saved:                %rbx, %r12, %r13, %r14. %rbp, %rsp
+
+Caller-Saved                 %rdi, %rsi, %rdx, %rcx, %r8, %r9, %rax, %r10, %r11
+
+Stack pointer:               %rsp
+
+Instruction pointer:         %rip

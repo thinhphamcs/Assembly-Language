@@ -1,0 +1,2 @@
+First thing first, type "objdump -d bomb" into the linux command. Then look up till find the "phase_1,2,3,4...." Then type in "gdb" into the linux command. Next type "break  
+
